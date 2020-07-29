@@ -1,10 +1,9 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.urls import reverse
-# from orders.models import CodeCurrency
-# from imagekit.models import ImageSpecField
-# from imagekit.processors import ResizeToFill
+
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
 
 
 class UserManager(BaseUserManager):
@@ -41,10 +40,36 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 
+class AccountGroup(models.Model):
+    name = models.CharField(
+        blank=False,
+        verbose_name='группа',
+        null=False,
+        max_length=50
+    )
+
+    def __str__(self):
+        return self.name or 'Some group'
+
+
 class Account(AbstractUser):
 
     username = None
     email = models.EmailField(_('email address'), unique=True)
+
+    group = models.ForeignKey(
+        AccountGroup,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
+    occupation = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        verbose_name='род деятельности'
+    )
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -54,15 +79,14 @@ class Account(AbstractUser):
         blank=True,
         null=True,
         verbose_name='avatar',
-
     )
 
-    # avatar_thumbnail = ImageSpecField(
-    #     source='avatar',
-    #     processors=[ResizeToFill(100, 100)],
-    #     format='JPEG',
-    #     options={'quality': 60}
-    # )
+    avatar_thumbnail = ImageSpecField(
+        source='avatar',
+        processors=[ResizeToFill(100, 100)],
+        format='JPEG',
+        options={'quality': 60}
+    )
 
     second_name = models.CharField(
         blank=True,
@@ -76,12 +100,6 @@ class Account(AbstractUser):
         verbose_name='описание',
         null=True,
         max_length=350
-    )
-
-    birthday = models.DateTimeField(
-        null=True,
-        blank=True,
-        verbose_name='день рождения'
     )
 
     phone = models.CharField(
@@ -101,11 +119,7 @@ class Account(AbstractUser):
         verbose_name='Updated'
     )
 
-    # def get_absolute_url(self):
-    #     return reverse('accounts:myprofile', args=(self.id,))
-
     objects = UserManager()  ## This is the new line in the User model. ##
-
 
     def __str__(self):
         return ' '.join([
@@ -113,14 +127,14 @@ class Account(AbstractUser):
             self.last_name,
         ])
 
-    # def save(self, *args, **kwargs):
-    #     if self.pk is not None:
-    #         old_self = Account.objects.get(pk=self.pk)
-    #         if old_self.avatar_thumbnail and self.avatar_thumbnail != old_self.avatar_thumbnail:
-    #             old_self.avatar_thumbnail.delete(False)
-    #         if old_self.avatar and self.avatar != old_self.avatar:
-    #             old_self.avatar.delete(False)
-    #     return super(Account, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        if self.pk is not None:
+            old_self = Account.objects.get(pk=self.pk)
+            if old_self.avatar_thumbnail and self.avatar_thumbnail != old_self.avatar_thumbnail:
+                old_self.avatar_thumbnail.delete(False)
+            if old_self.avatar and self.avatar != old_self.avatar:
+                old_self.avatar.delete(False)
+        return super(Account, self).save(*args, **kwargs)
 
 
 class Activation(models.Model):
@@ -129,59 +143,4 @@ class Activation(models.Model):
     code = models.CharField(max_length=20, unique=True)
     email = models.EmailField(blank=True)
 
-class UserWeightRecord(models.Model):
-    """Модель записи измерения веса"""
-    user = models.ForeignKey(
-        Account,
-        on_delete=models.CASCADE
-    )
-
-    value = models.PositiveSmallIntegerField(
-        default=0
-    )
-
-    created = models.DateTimeField(
-        auto_now_add=True
-    )
-
-    def __str__(self):
-        return str(self.pk) + " - " + self.user.email or ""
-
-
-class UserHeightRecord(models.Model):
-    """Модель записи измерения роста"""
-    user = models.ForeignKey(
-        Account,
-        on_delete=models.CASCADE
-    )
-
-    value = models.PositiveSmallIntegerField(
-        default=0
-    )
-
-    created = models.DateTimeField(
-        auto_now_add=True
-    )
-
-    def __str__(self):
-        return str(self.pk) + " - " + self.user.email or ""
-
-
-class UserBMIRecord(models.Model):
-    """Модель записи измерения роста"""
-    user = models.ForeignKey(
-        Account,
-        on_delete=models.CASCADE
-    )
-
-    value = models.PositiveSmallIntegerField(
-        default=0
-    )
-
-    created = models.DateTimeField(
-        auto_now_add=True
-    )
-
-    def __str__(self):
-        return str(self.pk) + " - " + self.user.email or ""
 

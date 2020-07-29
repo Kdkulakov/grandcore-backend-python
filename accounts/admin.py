@@ -1,6 +1,4 @@
-from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from accounts.models import Account
+from accounts.models import Account, Activation, AccountGroup
 
 
 """Integrate with admin module."""
@@ -16,8 +14,8 @@ class UserAdmin(DjangoUserAdmin):
 
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        (_('Personal info'), {'fields': ('first_name', 'second_name', 'last_name', 'birthday', 'avatar', 'about',
-                                         'phone', 'is_deleted')}),
+        (_('Personal info'), {'fields': ('first_name', 'second_name', 'last_name', 'group', 'occupation', 'avatar',
+                                          'about', 'phone', 'is_deleted')}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
                                        'groups', 'user_permissions')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
@@ -34,22 +32,11 @@ class UserAdmin(DjangoUserAdmin):
     ordering = ('email',)
 
 
-# @admin.register(Account)
-# class AccountAdmin(UserAdmin):
-#     fieldsets = (
-#         (
-#             'Профиль', {
-#                 'fields': ('first_name', 'second_name', 'last_name',
-#                            'avatar', 'phone', 'burstday', 'type', 'groupID')
-#             },
-#
-#         ),
-#         (
-#             'Системные параметры', {
-#                 'fields': ('email', 'password', 'last_login', 'date_joined',
-#                            'is_active', 'is_superuser', 'user_permissions', 'isDeleted')
-#             },
-#         )
-#
-#     )
-#
+@admin.register(Activation)
+class ActivationAdmin(admin.ModelAdmin):
+    fields = ['user', 'code', 'email']
+
+
+@admin.register(AccountGroup)
+class AccountGroupAdmin(admin.ModelAdmin):
+    fields = ['name']

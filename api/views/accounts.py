@@ -1,10 +1,5 @@
-from accounts.models import Account, UserBMIRecord, UserHeightRecord, UserWeightRecord
-from api.serializers.accounts import (
-    AccountSerializer,
-    UserHeightRecordSerializer,
-    UserWeightRecordSerializer,
-    UserBMIRecordSerializer,
-)
+from accounts.models import Account
+from api.serializers.accounts import AccountSerializer
 
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.pagination import PageNumberPagination
