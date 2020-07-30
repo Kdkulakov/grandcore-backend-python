@@ -1,4 +1,4 @@
-from accounts.models import Account, Activation, AccountGroup
+from accounts.models import Account, AccountGroup
 
 
 """Integrate with admin module."""
@@ -30,11 +30,6 @@ class UserAdmin(DjangoUserAdmin):
     list_display = ('email', 'first_name', 'last_name',  'is_staff', 'is_active', 'is_deleted')
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)
-
-
-@admin.register(Activation)
-class ActivationAdmin(admin.ModelAdmin):
-    fields = ['user', 'code', 'email']
 
 
 @admin.register(AccountGroup)

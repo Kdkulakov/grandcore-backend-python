@@ -135,12 +135,3 @@ class Account(AbstractUser):
             if old_self.avatar and self.avatar != old_self.avatar:
                 old_self.avatar.delete(False)
         return super(Account, self).save(*args, **kwargs)
-
-
-class Activation(models.Model):
-    user = models.ForeignKey(Account, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    code = models.CharField(max_length=20, unique=True)
-    email = models.EmailField(blank=True)
-
-

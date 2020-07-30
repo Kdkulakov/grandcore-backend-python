@@ -27,6 +27,7 @@ AUTH_USER_MODEL = 'accounts.Account'
 INSTALLED_APPS = [
     'accounts',
     'api',
+    'invite',
     'rest_framework_jwt',
     'imagekit',
     'django.contrib.admin',
