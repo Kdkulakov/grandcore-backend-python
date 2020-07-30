@@ -6,15 +6,18 @@ from accounts.models import Account
 class Invite(models.Model):
     uuid = models.UUIDField(unique=True, default=uuid.uuid4)
     registration = models.PositiveSmallIntegerField(
-        verbose_name='количество егистраций'
+        verbose_name='количество регистраций',
+        blank=True,
+        null=True
     )
     capacity = models.PositiveSmallIntegerField(
-        verbose_name='объем регистраций'
+        verbose_name='объем регистраций',
     )
     remaining_volume = models.PositiveSmallIntegerField(
-        verbose_name='остаток регистраций'
+        verbose_name='остаток регистраций',
+        blank=True,
+        null=True
     )
-
     created = models.DateTimeField(
         auto_now_add=True
     )
@@ -40,4 +43,4 @@ class InviteRegistration(models.Model):
     )
 
     def __str__(self):
-        return str(self.id_invite) + " " + self.user or ''
+        return str(self.id_invite) + " " + self.id_account.email or ''

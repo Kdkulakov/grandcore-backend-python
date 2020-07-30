@@ -8,16 +8,19 @@ from rest_framework_jwt.views import obtain_jwt_token
 from rest_framework_jwt.views import refresh_jwt_token
 from rest_framework_jwt.views import verify_jwt_token
 
+from .views.accounts import account_registration_handler
 
 router = DefaultRouter()
 router.register('user', AccountViewSet)
 router.register('invite', InviteViewSet)
 router.register('invite_reg', InviteRegistrationViewSet)
 
-jwturlpatterns = [
-    path('auth-jwt/', obtain_jwt_token),
-    path('auth-jwt-refresh/', refresh_jwt_token),
-    path('auth-jwt-verify/', verify_jwt_token),
-]
+# jwturlpatterns = [
+#     path('auth-jwt/', obtain_jwt_token),
+#     path('auth-jwt-refresh/', refresh_jwt_token),
+#     path('auth-jwt-verify/', verify_jwt_token),
+# ]
 
-urlpatterns = router.urls
+urlpatterns = [
+   path('register_user', account_registration_handler),
+] + router.urls  #+ jwturlpatterns

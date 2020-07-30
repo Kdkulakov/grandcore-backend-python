@@ -28,7 +28,7 @@ INSTALLED_APPS = [
     'accounts',
     'api',
     'invite',
-    'rest_framework_jwt',
+    # 'rest_framework_jwt',
     'imagekit',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -117,14 +117,14 @@ REST_FRAMEWORK = {
 }
 
 
-JWT_AUTH = {
-
-    'JWT_VERIFY': True,
-    'JWT_VERIFY_EXPIRATION': True,
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=3000),
-    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
-
-}
+# JWT_AUTH = {
+#
+#     'JWT_VERIFY': True,
+#     'JWT_VERIFY_EXPIRATION': True,
+#     'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=3000),
+#     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+#
+# }
 
 
 # Internationalization
