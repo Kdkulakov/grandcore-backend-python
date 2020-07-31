@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
-
+from taggit.managers import TaggableManager
 
 class UserManager(BaseUserManager):
     """Define a model manager for User model with no username field."""
@@ -101,6 +101,8 @@ class Account(AbstractUser):
         null=True,
         max_length=350
     )
+
+    skills = TaggableManager()
 
     phone = models.CharField(
         max_length=11,

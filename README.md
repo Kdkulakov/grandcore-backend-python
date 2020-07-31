@@ -13,9 +13,46 @@
 
 **Безопасность**
 
-Используем jwt token полное описание есть тут https://jpadilla.github.io/django-rest-framework-jwt/
+Используем simple jwt token полное описание есть тут https://django-rest-framework-simplejwt.readthedocs.io/en/latest/getting_started.html
 
-Тут все стандартно/по инструкции
+- получение токена - отправляем на url `http://127.0.0.1:8000/api/token/` POST запрос с  типом контента
+json, c полями email, password
+
+    Пример тела запроса
+`{
+    "email": "admin@ex.com",
+    "password": "123"
+}`
+    
+    Ответом будет json c двумя токенами, один для рефреша, второй для авторизации `{
+    "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTU5NjMwODYxMiwianRpIjoiMzFlMTdjZGJkODc1NDU5NmJhOGNhZmI2MDkyZTcwYjUiLCJ1c2VyX2lkIjoxfQ.vajxFI4egee_v1sov37VU7166mcDPj5tKJuzM3Oq3lo",
+    "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNTk2MjIyNTEyLCJqdGkiOiJlOGNhNGQ1OGMyMTU0Y2FjOGFiZGUwMDUyNmJjOWE5NiIsInVzZXJfaWQiOjF9.V_Wh-GxNQDJZEYcfV9vB4lb0srJpdBt7RcIeaxQoXRU"
+}`
+
+Токены имеют свойства "протухать" - наш токен закончит действовать через 3000 сек. 
+   
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    
+По этому нужно его обновить до истечении этого времени.
+- обновление токена - отправляем POST запрос на url `http://127.0.0.1:8000/api/token/refresh/`
+
+    пример запроса `{
+    "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTU5NjMwODYxMiwianRpIjoiMzFlMTdjZGJkODc1NDU5NmJhOGNhZmI2MDkyZTcwYjUiLCJ1c2VyX2lkIjoxfQ.vajxFI4egee_v1sov37VU7166mcDPj5tKJuzM3Oq3lo"
+}`
+    
+    получаем новый токен для авторизации запросов к бэку `{
+    "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNTk2MjIyNTgxLCJqdGkiOiJhM2YwODgxNzk0Y2M0ODFjOTQ4ZmY5ZDkzOTAxODE5NSIsInVzZXJfaWQiOjF9.pzzZy5AghN67KFeTv_rDqh6l-QT0HlgNJc2nmD9f-zw"
+}`
+
+Дальше после получения токена можно получить например информацию о пользователе.
+Отсылаем на url `http://127.0.0.1:8000/user/` POST запрос в виде: 
+- в боди пишем `{
+    "email": "admin@ex.com"
+}`
+- в хедер передаем `Authorization со значением Bearer tut_nash_token`
+
 
 **Запуск сервера**
 
