@@ -5,9 +5,9 @@ from api.serializers.accounts import AccountSerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.pagination import PageNumberPagination
 
-from rest_framework.decorators import api_view
 from django.http import HttpResponse
-from django.http import JsonResponse
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 
 
 class LargeResultsSetPagination(PageNumberPagination):
@@ -70,6 +70,7 @@ def create_invite_registration(invite, user_id):
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def account_registration_handler(request):
 
     if request.method == 'POST':
